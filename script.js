@@ -1,9 +1,22 @@
 let schedules = [];
 let currentAlert = null;
 
+function login() {
+  const companyId = document.getElementById("companyId").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!companyId || !password) {
+    alert("Please enter Company ID / Staff ID and password.");
+    return;
+  }
+
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("app").classList.remove("hidden");
+}
+
 function addSchedule() {
-  const name = document.getElementById("patientName").value;
-  const med = document.getElementById("medication").value;
+  const name = document.getElementById("patientName").value.trim();
+  const med = document.getElementById("medication").value.trim();
   const time = document.getElementById("medTime").value;
   const alertType = document.getElementById("alertType").value;
 
@@ -27,7 +40,7 @@ function displaySchedules() {
   const list = document.getElementById("scheduleList");
   list.innerHTML = "";
 
-  schedules.forEach((s, index) => {
+  schedules.forEach((s) => {
     const li = document.createElement("li");
     li.innerText = `${s.med} for ${s.name} at ${s.time} (${s.alertType})`;
     list.appendChild(li);
@@ -43,7 +56,7 @@ function triggerAlert(schedule) {
 function takeDose() {
   if (!currentAlert) return;
 
-  logAction(`✅ Taken: ${currentAlert.med}`);
+  logAction(`✅ Taken: ${currentAlert.med} for ${currentAlert.name}`);
   document.getElementById("alertBox").innerText = "No active alerts";
   currentAlert = null;
 }
@@ -51,7 +64,7 @@ function takeDose() {
 function missDose() {
   if (!currentAlert) return;
 
-  logAction(`❌ Missed: ${currentAlert.med} (Caregiver notified)`);
+  logAction(`❌ Missed: ${currentAlert.med} for ${currentAlert.name} (Caregiver notified)`);
   document.getElementById("alertBox").innerText = "No active alerts";
   currentAlert = null;
 }
