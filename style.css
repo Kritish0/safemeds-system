@@ -2,12 +2,91 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: #f4f7fb;
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
 
+.hidden {
+  display: none !important;
+}
+
+/* Login Page */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #0f172a, #1e3a8a);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.logo-badge {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.8rem;
+  background: #e0ecff;
+}
+
+.login-card h1 {
+  margin: 0 0 8px;
+  color: #1e293b;
+}
+
+.login-card p {
+  margin: 0 0 18px;
+  color: #64748b;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-card button:hover {
+  background: #1d4ed8;
+}
+
+.login-card small {
+  display: block;
+  margin-top: 12px;
+  color: #64748b;
+}
+
+/* Main App */
 .container {
   max-width: 800px;
   margin: auto;
+  padding: 20px;
 }
 
 h1 {
@@ -29,6 +108,7 @@ input, select {
   margin: 8px 0;
   border-radius: 6px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 button {
@@ -75,4 +155,14 @@ li {
   margin-bottom: 8px;
   padding: 10px;
   border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 14px;
+  }
+
+  .login-card {
+    padding: 24px 20px;
+  }
 }
