@@ -1,0 +1,25 @@
+document.getElementById("scheduleForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const name = document.getElementById("patientName").value;
+  const med = document.getElementById("medication").value;
+  const time = document.getElementById("medTime").value;
+  const alert = document.getElementById("alertType").value;
+
+  document.getElementById("alertBox").innerText = `🔔 Dose Due: ${med} for ${name} at ${time} (${alert} alert)`;
+});
+
+function acknowledgeDose() {
+  const log = document.getElementById("alertBox").innerText;
+  addLog(`${log} – ✅ Acknowledged`);
+}
+
+function missedDose() {
+  const log = document.getElementById("alertBox").innerText;
+  addLog(`${log} – ❌ Missed – Caregiver Notified`);
+}
+
+function addLog(entry) {
+  const li = document.createElement("li");
+  li.innerText = entry;
+  document.getElementById("logList").appendChild(li);
+}
