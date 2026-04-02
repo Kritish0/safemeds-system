@@ -1,5 +1,6 @@
 let schedules = [];
 let currentAlert = null;
+let logCount = 0;
 
 function login() {
   const companyId = document.getElementById("companyId").value.trim();
@@ -10,8 +11,21 @@ function login() {
     return;
   }
 
-  document.getElementById("loginPage").style.display = "none";
-  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("loginPage").classList.add("hidden");
+  document.getElementById("appPage").classList.remove("hidden");
+  document.getElementById("welcomeText").innerText = `Welcome back, ${companyId}`;
+}
+
+function logout() {
+  document.getElementById("loginPage").classList.remove("hidden");
+  document.getElementById("appPage").classList.add("hidden");
+  document.getElementById("companyId").value = "";
+  document.getElementById("password").value = "";
+}
+
+function changeTheme() {
+  const selectedTheme = document.getElementById("themeSelector").value;
+  document.body.className = selectedTheme;
 }
 
 function addSchedule() {
@@ -21,56 +35,99 @@ function addSchedule() {
   const alertType = document.getElementById("alertType").value;
 
   if (!name || !med || !time) {
-    alert("Please fill all fields");
+    alert("Please fill all fields.");
     return;
   }
 
   const schedule = { name, med, time, alertType };
   schedules.push(schedule);
 
-  displaySchedules();
+  renderSchedules();
   triggerAlert(schedule);
 
   document.getElementById("patientName").value = "";
   document.getElementById("medication").value = "";
   document.getElementById("medTime").value = "";
+
+  updateSummary();
 }
 
-function displaySchedules() {
+function renderSchedules() {
   const list = document.getElementById("scheduleList");
   list.innerHTML = "";
 
-  schedules.forEach((s) => {
+  if (schedules.length === 0) {
+    list.innerHTML = `<li class="empty-item">No medication schedules added yet.</li>`;
+    return;
+  }
+
+  schedules.forEach((s, index) => {
     const li = document.createElement("li");
-    li.innerText = `${s.med} for ${s.name} at ${s.time} (${s.alertType})`;
+    li.innerHTML = `
+      <strong>${index + 1}. ${s.med}</strong><br>
+      Patient: ${s.name}<br>
+      Time: ${s.time}<br>
+      Alert: ${s.alertType}
+    `;
     list.appendChild(li);
   });
 }
 
 function triggerAlert(schedule) {
   currentAlert = schedule;
-  document.getElementById("alertBox").innerText =
-    `🔔 ${schedule.med} for ${schedule.name} at ${schedule.time}`;
+
+  const alertBox = document.getElementById("alertBox");
+  alertBox.classList.remove("idle-alert");
+  alertBox.classList.add("active-alert");
+  alertBox.innerText = `🔔 Dose Due: ${schedule.med} for ${schedule.name} at ${schedule.time} (${schedule.alertType} alert)`;
+
+  updateSummary();
 }
 
 function takeDose() {
-  if (!currentAlert) return;
+  if (!currentAlert) {
+    alert("There is no active alert right now.");
+    return;
+  }
 
-  logAction(`✅ Taken: ${currentAlert.med} for ${currentAlert.name}`);
-  document.getElementById("alertBox").innerText = "No active alerts";
-  currentAlert = null;
+  logAction(`✅ Taken: ${currentAlert.med} for ${currentAlert.name} at ${currentAlert.time}`);
+  clearAlert();
 }
 
 function missDose() {
-  if (!currentAlert) return;
+  if (!currentAlert) {
+    alert("There is no active alert right now.");
+    return;
+  }
 
-  logAction(`❌ Missed: ${currentAlert.med} for ${currentAlert.name} (Caregiver notified)`);
-  document.getElementById("alertBox").innerText = "No active alerts";
+  logAction(`❌ Missed: ${currentAlert.med} for ${currentAlert.name} at ${currentAlert.time} — Caregiver Notified`);
+  clearAlert();
+}
+
+function clearAlert() {
   currentAlert = null;
+
+  const alertBox = document.getElementById("alertBox");
+  alertBox.classList.remove("active-alert");
+  alertBox.classList.add("idle-alert");
+  alertBox.innerText = "No active alerts";
+
+  updateSummary();
 }
 
 function logAction(text) {
   const li = document.createElement("li");
   li.innerText = text;
-  document.getElementById("logList").appendChild(li);
+  document.getElementById("logList").prepend(li);
+  logCount++;
+  updateSummary();
 }
+
+function updateSummary() {
+  document.getElementById("totalSchedules").innerText = schedules.length;
+  document.getElementById("activeAlertStatus").innerText = currentAlert ? "Active" : "None";
+  document.getElementById("totalLogs").innerText = logCount;
+}
+
+renderSchedules();
+updateSummary();
