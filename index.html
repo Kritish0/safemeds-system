@@ -1,69 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SafeMeds System</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="theme-blue">
 
-  <!-- LOGIN PAGE -->
-  <div id="loginPage" class="login-container">
+  <!-- LOGIN SCREEN -->
+  <div id="loginPage" class="screen login-screen">
+    <div class="login-overlay"></div>
+
     <div class="login-card">
-      <div class="logo-badge">💊</div>
+      <div class="logo-circle">💊</div>
       <h1>SafeMeds</h1>
-      <p>Smart Medication Management System</p>
+      <p class="subtitle">Smart Medication Management System</p>
 
-      <input type="text" id="companyId" placeholder="Company ID / Staff ID">
-      <input type="password" id="password" placeholder="Password">
+      <div class="input-group">
+        <label for="companyId">Company ID / Staff ID</label>
+        <input type="text" id="companyId" placeholder="e.g. SM-2048" />
+      </div>
 
-      <button onclick="login()">Login</button>
-      <small>Demo login for caregiver access</small>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" />
+      </div>
+
+      <button class="primary-btn full-btn" onclick="login()">Login to Dashboard</button>
+      <p class="demo-text">Demo caregiver login for prototype presentation</p>
     </div>
   </div>
 
-  <!-- MAIN APP -->
-  <div id="app" class="hidden">
-    <div class="container">
-      <h1>💊 SafeMeds – Smart Medication System</h1>
+  <!-- MAIN APP SCREEN -->
+  <div id="appPage" class="screen hidden">
+    <header class="topbar">
+      <div>
+        <h2>💊 SafeMeds Dashboard</h2>
+        <p id="welcomeText">Welcome back</p>
+      </div>
 
-      <section class="card">
-        <h2>👩‍⚕️ Caregiver Setup</h2>
-
-        <input type="text" id="patientName" placeholder="Patient Name">
-        <input type="text" id="medication" placeholder="Medication Name">
-        <input type="time" id="medTime">
-
-        <select id="alertType">
-          <option>Audio</option>
-          <option>Visual</option>
-          <option>Both</option>
+      <div class="topbar-actions">
+        <select id="themeSelector" onchange="changeTheme()">
+          <option value="theme-blue">Blue Theme</option>
+          <option value="theme-green">Green Theme</option>
+          <option value="theme-purple">Purple Theme</option>
         </select>
+        <button class="secondary-btn" onclick="logout()">Logout</button>
+      </div>
+    </header>
 
-        <button onclick="addSchedule()">➕ Add Medication</button>
-      </section>
+    <main class="app-layout">
+      <section class="hero-panel">
+        <div class="hero-text">
+          <h1>Caregiver Medication Control Panel</h1>
+          <p>
+            Manage patient medication schedules, monitor current dose alerts,
+            and keep track of dispensing activity in one place.
+          </p>
+        </div>
 
-      <section class="card">
-        <h2>📅 Medication Schedule</h2>
-        <ul id="scheduleList"></ul>
-      </section>
-
-      <section class="card">
-        <h2>🔔 Current Alert</h2>
-        <div id="alertBox">No active alerts</div>
-
-        <div class="alert-buttons">
-          <button onclick="takeDose()">✅ Taken</button>
-          <button onclick="missDose()">❌ Missed</button>
+        <div class="summary-cards">
+          <div class="summary-card">
+            <span class="summary-label">Total Schedules</span>
+            <strong id="totalSchedules">0</strong>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Active Alert</span>
+            <strong id="activeAlertStatus">None</strong>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Log Entries</span>
+            <strong id="totalLogs">0</strong>
+          </div>
         </div>
       </section>
 
       <section class="card">
-        <h2>📋 Activity Log</h2>
-        <ul id="logList"></ul>
+        <div class="card-head">
+          <h3>👩‍⚕️ Caregiver Setup</h3>
+          <p>Add a new medication schedule for a patient</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="input-group">
+            <label for="patientName">Patient Name</label>
+            <input type="text" id="patientName" placeholder="e.g. Kivan" />
+          </div>
+
+          <div class="input-group">
+            <label for="medication">Medication</label>
+            <input type="text" id="medication" placeholder="e.g. Blood Pressure Tablet" />
+          </div>
+
+          <div class="input-group">
+            <label for="medTime">Time</label>
+            <input type="time" id="medTime" />
+          </div>
+
+          <div class="input-group">
+            <label for="alertType">Alert Type</label>
+            <select id="alertType">
+              <option>Audio</option>
+              <option>Visual</option>
+              <option>Both</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="primary-btn" onclick="addSchedule()">➕ Add Medication Schedule</button>
       </section>
-    </div>
+
+      <section class="grid-two">
+        <section class="card">
+          <div class="card-head">
+            <h3>📅 Medication Schedule</h3>
+            <p>All scheduled patient medications</p>
+          </div>
+          <ul id="scheduleList" class="list-box"></ul>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h3>🔔 Current Alert</h3>
+            <p>Latest medication reminder status</p>
+          </div>
+
+          <div id="alertBox" class="alert-box idle-alert">
+            No active alerts
+          </div>
+
+          <div class="alert-buttons">
+            <button class="success-btn" onclick="takeDose()">✅ Taken</button>
+            <button class="danger-btn" onclick="missDose()">❌ Missed</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h3>📋 Activity Log</h3>
+          <p>Medication actions recorded by the system</p>
+        </div>
+        <ul id="logList" class="list-box"></ul>
+      </section>
+    </main>
   </div>
 
   <script src="script.js"></script>
