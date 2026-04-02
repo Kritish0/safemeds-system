@@ -2,55 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SafeMeds System</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-  <h1>💊 SafeMeds – Smart Medication System</h1>
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="login-container">
+    <div class="login-card">
+      <div class="logo-badge">💊</div>
+      <h1>SafeMeds</h1>
+      <p>Smart Medication Management System</p>
 
-  <!-- SETUP -->
-  <section class="card">
-    <h2>👩‍⚕️ Caregiver Setup</h2>
+      <input type="text" id="companyId" placeholder="Company ID / Staff ID">
+      <input type="password" id="password" placeholder="Password">
 
-    <input type="text" id="patientName" placeholder="Patient Name">
-    <input type="text" id="medication" placeholder="Medication Name">
-    <input type="time" id="medTime">
-
-    <select id="alertType">
-      <option>Audio</option>
-      <option>Visual</option>
-      <option>Both</option>
-    </select>
-
-    <button onclick="addSchedule()">➕ Add Medication</button>
-  </section>
-
-  <!-- SCHEDULE LIST -->
-  <section class="card">
-    <h2>📅 Medication Schedule</h2>
-    <ul id="scheduleList"></ul>
-  </section>
-
-  <!-- ALERT -->
-  <section class="card">
-    <h2>🔔 Current Alert</h2>
-    <div id="alertBox">No active alerts</div>
-
-    <div class="alert-buttons">
-      <button onclick="takeDose()">✅ Taken</button>
-      <button onclick="missDose()">❌ Missed</button>
+      <button onclick="login()">Login</button>
+      <small>Demo login for caregiver access</small>
     </div>
-  </section>
+  </div>
 
-  <!-- LOG -->
-  <section class="card">
-    <h2>📋 Activity Log</h2>
-    <ul id="logList"></ul>
-  </section>
-</div>
+  <!-- MAIN APP -->
+  <div id="app" class="hidden">
+    <div class="container">
+      <h1>💊 SafeMeds – Smart Medication System</h1>
 
-<script src="script.js"></script>
+      <section class="card">
+        <h2>👩‍⚕️ Caregiver Setup</h2>
+
+        <input type="text" id="patientName" placeholder="Patient Name">
+        <input type="text" id="medication" placeholder="Medication Name">
+        <input type="time" id="medTime">
+
+        <select id="alertType">
+          <option>Audio</option>
+          <option>Visual</option>
+          <option>Both</option>
+        </select>
+
+        <button onclick="addSchedule()">➕ Add Medication</button>
+      </section>
+
+      <section class="card">
+        <h2>📅 Medication Schedule</h2>
+        <ul id="scheduleList"></ul>
+      </section>
+
+      <section class="card">
+        <h2>🔔 Current Alert</h2>
+        <div id="alertBox">No active alerts</div>
+
+        <div class="alert-buttons">
+          <button onclick="takeDose()">✅ Taken</button>
+          <button onclick="missDose()">❌ Missed</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>📋 Activity Log</h2>
+        <ul id="logList"></ul>
+      </section>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
