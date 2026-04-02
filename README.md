@@ -25,7 +25,7 @@ This project simulates a smart medication dispenser system that reduces the risk
 - Healthcare system simulation
 
 ## 🔗 Live Demo
-(Add your GitHub Pages link here after deployment)
+https://kritish0.github.io/safemeds-system/ 
 
 ## 👨‍💻 Author
 Kritish Pudasaini
