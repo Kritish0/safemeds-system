@@ -1,13 +1,29 @@
-let schedules = JSON.parse(localStorage.getItem("safemedsSchedules")) || [];
-let logs = JSON.parse(localStorage.getItem("safemedsLogs")) || [];
-let currentAlert = JSON.parse(localStorage.getItem("safemedsCurrentAlert")) || null;
-let logCount = logs.length;
+let schedules = [];
+let logs = [];
+let currentAlert = null;
+let currentUser = "";
+let logCount = 0;
 let alertSoundPlayedFor = null;
 
+function getStorageKey(base) {
+  return `${base}_${currentUser}`;
+}
+
 function saveData() {
-  localStorage.setItem("safemedsSchedules", JSON.stringify(schedules));
-  localStorage.setItem("safemedsLogs", JSON.stringify(logs));
-  localStorage.setItem("safemedsCurrentAlert", JSON.stringify(currentAlert));
+  if (!currentUser) return;
+
+  localStorage.setItem(getStorageKey("safemedsSchedules"), JSON.stringify(schedules));
+  localStorage.setItem(getStorageKey("safemedsLogs"), JSON.stringify(logs));
+  localStorage.setItem(getStorageKey("safemedsCurrentAlert"), JSON.stringify(currentAlert));
+}
+
+function loadUserData() {
+  if (!currentUser) return;
+
+  schedules = JSON.parse(localStorage.getItem(getStorageKey("safemedsSchedules"))) || [];
+  logs = JSON.parse(localStorage.getItem(getStorageKey("safemedsLogs"))) || [];
+  currentAlert = JSON.parse(localStorage.getItem(getStorageKey("safemedsCurrentAlert"))) || null;
+  logCount = logs.length;
 }
 
 function login() {
@@ -19,8 +35,12 @@ function login() {
     return;
   }
 
+  currentUser = companyId.toLowerCase();
+
   localStorage.setItem("safemedsLoggedIn", "true");
-  localStorage.setItem("safemedsUser", companyId);
+  localStorage.setItem("safemedsUser", currentUser);
+
+  loadUserData();
 
   document.getElementById("loginPage").classList.add("hidden");
   document.getElementById("appPage").classList.remove("hidden");
@@ -36,6 +56,12 @@ function logout() {
   localStorage.removeItem("safemedsLoggedIn");
   localStorage.removeItem("safemedsUser");
 
+  currentUser = "";
+  schedules = [];
+  logs = [];
+  currentAlert = null;
+  logCount = 0;
+
   document.getElementById("loginPage").classList.remove("hidden");
   document.getElementById("appPage").classList.add("hidden");
   document.getElementById("companyId").value = "";
@@ -47,6 +73,9 @@ function restoreLogin() {
   const user = localStorage.getItem("safemedsUser");
 
   if (loggedIn === "true" && user) {
+    currentUser = user;
+    loadUserData();
+
     document.getElementById("loginPage").classList.add("hidden");
     document.getElementById("appPage").classList.remove("hidden");
     document.getElementById("welcomeText").innerText = `Welcome back, ${user}`;
@@ -137,7 +166,7 @@ function renderSchedules() {
     li.innerHTML = `
       <div class="schedule-item-top">
         <div>
-          <strong>${index + 1}. ${s.med}</strong>
+          <strong>${index + 1}. ${s.med}</strong><br>
           Patient: ${s.name}<br>
           Dosage: ${s.dosage}<br>
           Time: ${s.time}<br>
@@ -158,7 +187,7 @@ function triggerAlert(schedule) {
   renderAlert();
   updateSummary();
 
-  const todayKey = `${schedule.id}-${new Date().toDateString()}`;
+  const todayKey = `${schedule.id}-${new Date().toDateString()}-${currentUser}`;
   if (alertSoundPlayedFor !== todayKey) {
     playAlertSound();
     alertSoundPlayedFor = todayKey;
@@ -275,6 +304,8 @@ function playAlertSound() {
 }
 
 function checkRealTimeAlerts() {
+  if (!currentUser) return;
+
   const now = new Date();
   const currentTime = now.toTimeString().slice(0, 5);
   const today = now.toDateString();
